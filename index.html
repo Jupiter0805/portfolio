@@ -257,6 +257,113 @@ footer{background:#030101;border-top:1px solid var(--border);padding:2.6rem 2rem
   .contact-form-wrap{padding:2rem 1.5rem;}
 }
 
+
+/* ══ POPUP ══ */
+#popup-overlay{
+  position:fixed;inset:0;z-index:9500;
+  background:rgba(5,2,2,.82);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  display:flex;align-items:center;justify-content:center;
+  padding:1.5rem;
+  opacity:0;animation:pop-in .5s .8s forwards;
+}
+@keyframes pop-in{from{opacity:0}to{opacity:1}}
+#popup-overlay.hidden{display:none;}
+
+#popup{
+  background:linear-gradient(155deg,#1A0C08 0%,#0E0606 60%,#1F0D0D 100%);
+  border:1px solid rgba(184,151,42,.35);
+  max-width:420px;width:100%;
+  padding:2.8rem 2.8rem 2.4rem;
+  position:relative;
+  box-shadow:0 32px 80px rgba(0,0,0,.7),0 0 0 1px rgba(184,151,42,.08);
+  transform:translateY(20px);
+  animation:pop-slide .5s .8s forwards;
+}
+@keyframes pop-slide{from{transform:translateY(20px)}to{transform:translateY(0)}}
+
+/* corner accents */
+#popup::before,#popup::after{
+  content:'';position:absolute;width:14px;height:14px;
+  border-color:var(--or);border-style:solid;
+}
+#popup::before{top:-1px;left:-1px;border-width:2px 0 0 2px;}
+#popup::after{bottom:-1px;right:-1px;border-width:0 2px 2px 0;}
+
+#popup-close{
+  position:absolute;top:1rem;right:1.1rem;
+  background:none;border:none;
+  color:rgba(240,232,213,.4);
+  font-size:1.4rem;line-height:1;
+  transition:color .25s;
+  padding:.2rem .4rem;
+}
+#popup-close:hover{color:var(--or);}
+
+.popup-badge{
+  display:inline-block;
+  font-family:"Cinzel",serif;font-size:.56rem;letter-spacing:.35em;
+  background:var(--wine);color:var(--or-pale);
+  border:1px solid rgba(184,151,42,.3);
+  padding:.35rem .9rem;
+  margin-bottom:1.3rem;
+  text-transform:uppercase;
+}
+.popup-eyebrow{
+  font-family:"Cinzel",serif;font-size:.58rem;letter-spacing:.45em;
+  text-transform:uppercase;color:var(--or);
+  margin-bottom:.9rem;
+}
+.popup-title{
+  font-family:"Cinzel",serif;
+  font-size:clamp(1.5rem,3vw,2rem);
+  font-weight:600;color:#fff;
+  line-height:1.25;margin-bottom:1.1rem;
+  letter-spacing:.02em;
+}
+.popup-title em{
+  font-family:"IM Fell English",serif;
+  font-style:italic;color:var(--or);font-weight:400;
+}
+.popup-sub{
+  font-size:1rem;line-height:1.7;
+  color:rgba(226,213,184,.72);
+  font-weight:300;margin-bottom:1.8rem;
+}
+.popup-sub strong{color:var(--or-pale);font-weight:600;}
+
+.popup-form{display:flex;flex-direction:column;gap:.85rem;margin-bottom:1rem;}
+.pf-group input{
+  width:100%;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(184,151,42,.22);
+  color:var(--ivoire);
+  font-family:"Crimson Pro",serif;font-size:1rem;
+  padding:.8rem 1rem;
+  outline:none;
+  transition:border-color .3s,background .3s;
+  border-radius:0;
+}
+.pf-group input::placeholder{color:rgba(240,232,213,.28);}
+.pf-group input:focus{border-color:var(--or);background:rgba(184,151,42,.05);}
+
+.pf-btn{
+  font-family:"Cinzel",serif;font-size:.65rem;letter-spacing:.28em;
+  text-transform:uppercase;
+  color:var(--bg);background:var(--or);
+  border:none;padding:1rem 1.5rem;
+  transition:background .35s,transform .25s;
+  width:100%;margin-top:.3rem;
+}
+.pf-btn:hover{background:var(--or-pale);transform:translateY(-2px);}
+.pf-btn:disabled{background:#6a5a20;transform:none;}
+
+.popup-legal{
+  font-family:"Cinzel",serif;font-size:.52rem;letter-spacing:.18em;
+  color:rgba(240,232,213,.28);text-align:center;
+  text-transform:uppercase;
+}
+
 /* ══ RESPONSIVE ══ */
 @media(max-width:960px){
   .prod-grid,.excl-grid,.var-cards,.ccontact{grid-template-columns:1fr;}
@@ -278,6 +385,31 @@ footer{background:#030101;border-top:1px solid var(--border);padding:2.6rem 2rem
 </style>
 </head>
 <body>
+
+<!-- ══ POPUP ══ -->
+<div id="popup-overlay">
+  <div id="popup">
+    <button id="popup-close" aria-label="Cerrar">&times;</button>
+    <div class="popup-badge">⚠ Pocas unidades</div>
+    <p class="popup-eyebrow">Cosecha 2019 &middot; Edición Limitada</p>
+    <h2 class="popup-title">Reserva tu botella<br><em>antes de que se agote</em></h2>
+    <p class="popup-sub">Solo quedan <strong>unas pocas botellas</strong> de esta cosecha. Déjanos tu nombre y correo y te contactamos para confirmar tu reserva.</p>
+    <form class="popup-form" onsubmit="handlePopup(event)">
+      <div class="pf-group">
+        <input type="text" name="nombre" placeholder="Tu nombre" required autocomplete="name">
+      </div>
+      <div class="pf-group">
+        <input type="email" name="email" placeholder="tu@email.com" required autocomplete="email">
+      </div>
+      <button type="submit" class="pf-btn">
+        <span class="pf-txt">Reservar mi botella</span>
+        <span class="pf-ok" style="display:none">✓ ¡Reserva anotada!</span>
+      </button>
+    </form>
+    <p class="popup-legal">Sin compromiso. Te contactamos en menos de 24h.</p>
+  </div>
+</div>
+
 
 <!-- ══ NAV ══ -->
 <nav id="nav">
@@ -606,6 +738,56 @@ function handleForm(e) {
     btn.disabled = false;
     e.target.reset();
   }, 3500);
+}
+
+
+// Popup
+(function(){
+  var overlay = document.getElementById('popup-overlay');
+  var closeBtn = document.getElementById('popup-close');
+  var STORAGE_KEY = 'valzan_popup_closed';
+
+  // Show popup (respect if closed this session)
+  if (!sessionStorage.getItem(STORAGE_KEY)) {
+    overlay.style.display = 'flex';
+  } else {
+    overlay.style.display = 'none';
+  }
+
+  closeBtn.addEventListener('click', function(){
+    closePopup();
+  });
+  overlay.addEventListener('click', function(e){
+    if (e.target === overlay) closePopup();
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') closePopup();
+  });
+
+  function closePopup(){
+    overlay.style.opacity = '0';
+    overlay.style.transition = 'opacity .3s ease';
+    setTimeout(function(){ overlay.style.display = 'none'; }, 300);
+    sessionStorage.setItem(STORAGE_KEY, '1');
+  }
+})();
+
+function handlePopup(e) {
+  e.preventDefault();
+  var btn = e.target.querySelector('.pf-btn');
+  var txt = btn.querySelector('.pf-txt');
+  var ok  = btn.querySelector('.pf-ok');
+  btn.disabled = true;
+  txt.style.display = 'none';
+  ok.style.display  = 'inline';
+  btn.style.background = '#3a6a2a';
+  setTimeout(function(){
+    var overlay = document.getElementById('popup-overlay');
+    overlay.style.opacity = '0';
+    overlay.style.transition = 'opacity .5s ease';
+    setTimeout(function(){ overlay.style.display = 'none'; }, 500);
+    sessionStorage.setItem('valzan_popup_closed','1');
+  }, 1800);
 }
 
 </script>
